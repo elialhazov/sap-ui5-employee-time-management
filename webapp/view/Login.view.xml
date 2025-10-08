@@ -1,0 +1,12 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    
+    <VBox class="sapUiSmallMargin" justifyContent="Center" alignItems="Center">
+        <Input id="inputName" placeholder="{i18n>name}" width="300px"/>
+        <Input id="inputPassword" placeholder="{i18n>password}" type="Password" width="300px"/>
+        <Button text="{i18n>loginButton}" press=".onLoginPress"/>
+        <Button text="{i18n>forgotPassword}" press=".onForgotPasswordPress" type="Transparent"/>
+    </VBox>
+</mvc:View>

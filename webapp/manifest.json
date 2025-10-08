@@ -1,0 +1,143 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "employeetimemanagement",
+    "type": "application",
+    "i18n": "i18n/i18n_en.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.18.4",
+      "toolsId": "97fb4155-58e1-43b5-8b96-c0f6cc0b178a"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZETM_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.139.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.comp": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "employeetimemanagement.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        },
+        { 
+          "uri": "css/timeManagement.css" 
+        },
+        { 
+          "uri": "css/timeRecordTable.css" 
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "employeetimemanagement.view",
+        "async": true,
+        "viewPath": "employeetimemanagement.view"
+      },
+      "routes": [
+        {
+          "name": "RouteLogin",
+          "pattern": ":?query:",
+          "target": [
+            "TargetLogin"
+          ]
+        },
+        {
+          "name": "RouteTimeManagement",
+          "pattern": "employee/{employeeId}",
+          "target": [
+            "TargetTimeManagement"
+          ]
+        },
+        {
+          "name": "RouteTimeRecordTable",
+          "pattern": "employee/{employeeId}/records",
+          "target": [
+            "TargetTimeRecordTable"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetLogin": {
+          "id": "Login",
+          "name": "Login"
+        },
+        "TargetTimeManagement": {
+          "id": "TimeManagement",
+          "name": "TimeManagement"
+        },
+        "TargetTimeRecordTable": {
+          "id": "TimeRecordTable",
+          "name": "TimeRecordTable"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "employeetimemanagement.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

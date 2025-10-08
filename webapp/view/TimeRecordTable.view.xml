@@ -1,0 +1,112 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.TimeRecordTable"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:smartFilter="sap.ui.comp.smartfilterbar"
+    xmlns:config="sap.ui.comp.config"
+    displayBlock="true">
+
+    <Page title="{i18n>timeRecordsTitle}">
+        <content>
+
+            <!-- Add New Record Button -->
+            <Button 
+                text="{i18n>addNewRecord}" 
+                type="Emphasized" 
+                icon="sap-icon://add" 
+                press=".onNavigateToAddRecord"
+                class="timeMgmtNavBtn"/>
+
+            <!-- Smart Table -->
+            <smartTable:SmartTable
+                id="smartTimeRecordTable"
+                entitySet="TimeRecordSet"
+                smartFilterId="smartFilterBar"
+                tableType="ResponsiveTable"
+                enableExport="false"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                header="{i18n>timeRecordsTitle}"
+                showRowCount="true"
+                enableAutoBinding="true"
+                class="sapUiResponsiveContentPadding"
+                enableAutoColumnWidth="true"
+                ignoredFields="EmployeeId,LogId,Inactive,ClockIn,ClockOut,TaskDesc"
+                initiallyVisibleFields="WorkDate,TotalHours,ClientName"
+                showPasteButton="false">
+
+                <!-- Inner sap.m.Table required for ResponsiveTable -->
+                <Table>
+                    <columns>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "WorkDate", "leadingProperty": "WorkDate", "sortProperty": "WorkDate"}' />
+                            </customData>
+                            <Text text="{i18n>workDate}" />
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "DayName", "leadingProperty": "DayName", "sortProperty": "DayName"}' />
+                            </customData>
+                            <Text text="{i18n>dayName}"/>
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "ClockIn", "leadingProperty": "ClockIn", "sortProperty": "ClockIn"}' />
+                            </customData>
+                            <Text text="{i18n>clockIn}"/>
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "ClockOut", "leadingProperty": "ClockOut", "sortProperty": "ClockOut"}' />
+                            </customData>
+                            <Text text="{i18n>clockOut}"/>
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "TotalHours", "leadingProperty": "TotalHours", "sortProperty": "TotalHours"}' />
+                            </customData>
+                            <Text text="{i18n>totalHours}"/>
+                        </Column>
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "ClientName", "leadingProperty": "ClientName", "sortProperty": "ClientName"}' />
+                            </customData>
+                            <Text text="{i18n>clientName}" />
+                        </Column>
+                        
+                        <Column>
+                            <customData>
+                                <core:CustomData key="p13nData"
+                                    value='{"columnKey": "TaskDesc", "leadingProperty": "TaskDesc", "sortProperty": "TaskDesc"}' />
+                            </customData>
+                            <Text text="{i18n>taskDesc}" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{path:'WorkDate', formatter:'.formatDate'}"/>
+                                <Text text="{path:'DayName', formatter:'.formatDayName'}"/>
+                                <Text text="{path:'ClockIn', formatter:'.formatTime'}"/>
+                                <Text text="{parts: [ {path:'ClockOut'}, {path: 'Inactive'} ], formatter:'.formatClockOut'}"/>
+                                <Text text="{TotalHours}"/>
+                                <Text text="{ClientName}"/>
+                                <Text text="{TaskDesc}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </smartTable:SmartTable>
+        </content>
+    </Page>
+</mvc:View>

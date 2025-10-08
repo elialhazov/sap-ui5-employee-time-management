@@ -1,0 +1,17 @@
+/* Truncate long texts and show tooltip on small screens */
+.timeMgmtTable .sapMListTblCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#container-employeetimemanagement---TimeRecordTable--smartTimeRecordTable-btnCopy {
+    display: none !important;
+}
+
+/* Optional: smaller padding on mobile */
+@media (max-width: 768px) {
+    .timeMgmtTable .sapMListTblCell {
+        padding: 0.3rem 0.5rem;
+    }
+}

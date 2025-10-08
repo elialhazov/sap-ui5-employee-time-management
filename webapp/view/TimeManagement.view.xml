@@ -1,0 +1,170 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.TimeManagement"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page title="{i18n>timeRecordsTitle}">
+        <content>
+            <VBox class="timeMgmtVBox">
+
+                <!-- Quick Logging Section -->
+                <Panel 
+                    expandable="false" 
+                    class="timeMgmtPanel">
+
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="{i18n>addRecord}" level="H2"/>
+                            <ToolbarSpacer/>
+                            <Button 
+                                text="{i18n>viewAllRecords}" 
+                                type="Emphasized" 
+                                icon="sap-icon://list" 
+                                press=".onNavigateToRecords"
+                                class="timeMgmtNavBtn"/>
+                        </Toolbar>
+                    </headerToolbar>
+
+                    <VBox class="timeMgmtVBox">
+
+                        <HBox class="timeMgmtHBoxInner">
+                            <Label text="{i18n>addManually}" labelFor="swManualMode"/>
+                            <Switch 
+                                id="swManualMode"
+                                change=".onModeToggle"
+                                customTextOn="{i18n>on}"
+                                customTextOff="{i18n>off}"/>
+                        </HBox>   
+
+                        <!-- Client & Task -->
+                        <VBox class="timeMgmtVBox">
+                            <ComboBox
+                                id="cbClient"
+                                class="timeMgmtInput"
+                                placeholder="{i18n>clientName}"
+                                items="{ path: '/EmployeeClientSet', templateShareable: false }">
+                                <core:Item key="{ClientId}" text="{ClientName}"/>
+                            </ComboBox>
+
+                            <Input
+                                id="inpTaskDesc"
+                                class="timeMgmtInput"
+                                placeholder="{i18n>taskDesc}"/>                                
+                        </VBox>
+
+                        <!-- Buttons & Switch -->
+                        <VBox id="autoModeBox" class="timeMgmtVBox">
+                            <HBox class="timeMgmtHBox" alignItems="Center">
+                                <Button 
+                                    id="btnStart" 
+                                    text="{i18n>start}" 
+                                    type="Accept"
+                                    icon="sap-icon://play"
+                                    class="timeMgmtButton"
+                                    press=".onStartPress"/>
+                                
+                                <Button 
+                                    id="btnStop" 
+                                    text="{i18n>stop}" 
+                                    type="Reject"
+                                    icon="sap-icon://stop"
+                                    class="timeMgmtButton"
+                                    press=".onStopPress"
+                                    enabled="false"/>
+                            </HBox>
+
+                            <!-- Elapsed Time -->
+                            <HBox class="timeMgmtHBox timeMgmtElapsed">
+                                <Label text="{i18n>timePassed}:" class="timeLabel"/>
+                                <Text id="txtTimer" text="0:00:00" class="timeMgmtTimer"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="timeMgmtVBox">
+
+                        <HBox class="timeMgmtHBox">
+                            <DatePicker 
+                                id="dpWorkDate" 
+                                class="timeMgmtInput" 
+                                valueFormat="yyyy-MM-dd"
+                                displayFormat="long" 
+                                placeholder="{i18n>workDate}" 
+                                enabled="false" 
+                                change=".onInputChange"/>
+
+                            <HBox class="timeMgmtHBox timeMgmtDayName" fitContainer="false">
+                                <Text text="{i18n>dayName}: "/>
+                                <Text id="txtDayName" class="timeMgmtSummaryText"/>
+                            </HBox>
+
+                            <TimePicker 
+                                id="tpClockIn" 
+                                class="timeMgmtInput" 
+                                valueFormat="HH:mm:ss"
+                                displayFormat="HH:mm" 
+                                enabled="false" 
+                                change=".onInputChange"/>
+
+                            <TimePicker 
+                                id="tpClockOut" 
+                                class="timeMgmtInput" 
+                                valueFormat="HH:mm:ss"
+                                displayFormat="HH:mm" 
+                                enabled="false" 
+                                change=".onInputChange"/>
+                            
+                            <HBox class="timeMgmtHBox timeMgmtTotalHours" fitContainer="false">
+                                <Text text="{i18n>totalHours}: "/>
+                                <Text id="txtTotalHours" class="timeMgmtSummaryText"/>
+                            </HBox>
+
+                            <Button 
+                                id="btnSubmitManual" 
+                                text="{i18n>submit}" 
+                                type="Emphasized"
+                                icon="sap-icon://save"
+                                class="timeMgmtButton" 
+                                press=".onAddTimeRecord" 
+                                enabled="false"/>
+                        </HBox>
+                    </VBox>
+                </Panel>
+
+                <!-- Hidden Records Table -->
+                <Table
+                    id="timeRecordTable"
+                    class="timeMgmtTable"
+                    inset="false"
+                    visible="false"
+                    items="{ path: '/TimeRecordSet' }">
+                    <columns>
+                        <Column><Text text="{i18n>workDate}"/></Column>
+                        <Column><Text text="{i18n>dayName}"/></Column>
+                        <Column><Text text="{i18n>clockIn}"/></Column>
+                        <Column><Text text="{i18n>clockOut}"/></Column>
+                        <Column><Text text="{i18n>totalHours}"/></Column>
+                        <Column><Text text="{i18n>clientName}"/></Column>
+                        <Column><Text text="{i18n>taskDesc}"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{path:'WorkDate', formatter:'.formatDate'}"/>
+                                <Text text="{path:'DayName', formatter:'.formatDayName'}"/>
+                                <Text text="{path:'ClockIn', formatter:'.formatTime'}"/>
+                                <Text text="{parts: [ {path:'ClockOut'}, {path: 'Inactive'} ], formatter:'.formatClockOut'}"/>
+                                <Text text="{TotalHours}"/>
+                                <Text text="{ClientName}"/>
+                                <Text text="{TaskDesc}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
