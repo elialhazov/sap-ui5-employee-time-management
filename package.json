@@ -12,7 +12,7 @@
     "nwabap-ui5uploader": "^1.2.0"
   },
   "devDependencies": {
-    "@sap-ux/ui5-middleware-fe-mockserver": "2",
+    "@sap-ux/ui5-middleware-fe-mockserver": "^2.3.31",
     "@sap/ux-ui5-tooling": "1",
     "@ui5/cli": "^4.0.16"
   },

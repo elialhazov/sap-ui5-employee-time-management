@@ -10,18 +10,16 @@
             <VBox class="timeMgmtVBox">
 
                 <!-- Quick Logging Section -->
-                <Panel 
-                    expandable="false" 
-                    class="timeMgmtPanel">
+                <Panel expandable="false" class="timeMgmtPanel">
 
                     <headerToolbar>
                         <Toolbar>
                             <Title text="{i18n>addRecord}" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button 
-                                text="{i18n>viewAllRecords}" 
-                                type="Emphasized" 
-                                icon="sap-icon://list" 
+                            <Button
+                                text="{i18n>viewAllRecords}"
+                                type="Emphasized"
+                                icon="sap-icon://list"
                                 press=".onNavigateToRecords"
                                 class="timeMgmtNavBtn"/>
                         </Toolbar>
@@ -29,45 +27,44 @@
 
                     <VBox class="timeMgmtVBox">
 
+                        <!-- Manual Mode Switch -->
                         <HBox class="timeMgmtHBoxInner">
                             <Label text="{i18n>addManually}" labelFor="swManualMode"/>
-                            <Switch 
+                            <Switch
                                 id="swManualMode"
                                 change=".onModeToggle"
                                 customTextOn="{i18n>on}"
                                 customTextOff="{i18n>off}"/>
-                        </HBox>   
+                        </HBox>
 
                         <!-- Client & Task -->
                         <VBox class="timeMgmtVBox">
+                            <!-- ❗️ NO items binding here (handled in controller) -->
                             <ComboBox
                                 id="cbClient"
                                 class="timeMgmtInput"
-                                placeholder="{i18n>clientName}"
-                                items="{ path: '/EmployeeClientSet', templateShareable: false }">
-                                <core:Item key="{ClientId}" text="{ClientName}"/>
-                            </ComboBox>
+                                placeholder="{i18n>clientName}"/>
 
                             <Input
                                 id="inpTaskDesc"
                                 class="timeMgmtInput"
-                                placeholder="{i18n>taskDesc}"/>                                
+                                placeholder="{i18n>taskDesc}"/>
                         </VBox>
 
-                        <!-- Buttons & Switch -->
+                        <!-- Auto Mode -->
                         <VBox id="autoModeBox" class="timeMgmtVBox">
                             <HBox class="timeMgmtHBox" alignItems="Center">
-                                <Button 
-                                    id="btnStart" 
-                                    text="{i18n>start}" 
+                                <Button
+                                    id="btnStart"
+                                    text="{i18n>start}"
                                     type="Accept"
                                     icon="sap-icon://play"
                                     class="timeMgmtButton"
                                     press=".onStartPress"/>
-                                
-                                <Button 
-                                    id="btnStop" 
-                                    text="{i18n>stop}" 
+
+                                <Button
+                                    id="btnStop"
+                                    text="{i18n>stop}"
                                     type="Reject"
                                     icon="sap-icon://stop"
                                     class="timeMgmtButton"
@@ -83,81 +80,66 @@
                         </VBox>
                     </VBox>
 
+                    <!-- Manual Mode -->
                     <VBox class="timeMgmtVBox">
-
                         <HBox class="timeMgmtHBox">
-                            <DatePicker 
-                                id="dpWorkDate" 
-                                class="timeMgmtInput" 
+
+                            <DatePicker
+                                id="dpWorkDate"
+                                class="timeMgmtInput"
                                 valueFormat="yyyy-MM-dd"
-                                displayFormat="long" 
-                                placeholder="{i18n>workDate}" 
-                                enabled="false" 
-                                change=".onInputChange"/>
+                                displayFormat="long"
+                                placeholder="{i18n>workDate}"
+                                enabled="false"/>
 
-                            <HBox class="timeMgmtHBox timeMgmtDayName" fitContainer="false">
-                                <Text text="{i18n>dayName}: "/>
-                                <Text id="txtDayName" class="timeMgmtSummaryText"/>
-                            </HBox>
-
-                            <TimePicker 
-                                id="tpClockIn" 
-                                class="timeMgmtInput" 
+                            <TimePicker
+                                id="tpClockIn"
+                                class="timeMgmtInput"
                                 valueFormat="HH:mm:ss"
-                                displayFormat="HH:mm" 
-                                enabled="false" 
-                                change=".onInputChange"/>
+                                displayFormat="HH:mm"
+                                enabled="false"/>
 
-                            <TimePicker 
-                                id="tpClockOut" 
-                                class="timeMgmtInput" 
+                            <TimePicker
+                                id="tpClockOut"
+                                class="timeMgmtInput"
                                 valueFormat="HH:mm:ss"
-                                displayFormat="HH:mm" 
-                                enabled="false" 
-                                change=".onInputChange"/>
-                            
-                            <HBox class="timeMgmtHBox timeMgmtTotalHours" fitContainer="false">
-                                <Text text="{i18n>totalHours}: "/>
-                                <Text id="txtTotalHours" class="timeMgmtSummaryText"/>
-                            </HBox>
+                                displayFormat="HH:mm"
+                                enabled="false"/>
 
-                            <Button 
-                                id="btnSubmitManual" 
-                                text="{i18n>submit}" 
+                            <Button
+                                id="btnSubmitManual"
+                                text="{i18n>submit}"
                                 type="Emphasized"
                                 icon="sap-icon://save"
-                                class="timeMgmtButton" 
-                                press=".onAddTimeRecord" 
+                                class="timeMgmtButton"
+                                press=".onAddTimeRecord"
                                 enabled="false"/>
                         </HBox>
                     </VBox>
                 </Panel>
 
-                <!-- Hidden Records Table -->
+                <!-- Hidden Records Table (debug / optional) -->
                 <Table
                     id="timeRecordTable"
                     class="timeMgmtTable"
-                    inset="false"
                     visible="false"
                     items="{ path: '/TimeRecordSet' }">
+
                     <columns>
                         <Column><Text text="{i18n>workDate}"/></Column>
-                        <Column><Text text="{i18n>dayName}"/></Column>
                         <Column><Text text="{i18n>clockIn}"/></Column>
                         <Column><Text text="{i18n>clockOut}"/></Column>
-                        <Column><Text text="{i18n>totalHours}"/></Column>
                         <Column><Text text="{i18n>clientName}"/></Column>
                         <Column><Text text="{i18n>taskDesc}"/></Column>
                     </columns>
+
                     <items>
                         <ColumnListItem>
                             <cells>
                                 <Text text="{path:'WorkDate', formatter:'.formatDate'}"/>
-                                <Text text="{path:'DayName', formatter:'.formatDayName'}"/>
                                 <Text text="{path:'ClockIn', formatter:'.formatTime'}"/>
-                                <Text text="{parts: [ {path:'ClockOut'}, {path: 'Inactive'} ], formatter:'.formatClockOut'}"/>
-                                <Text text="{TotalHours}"/>
-                                <Text text="{ClientName}"/>
+                                <Text text="{parts:[{path:'ClockOut'},{path:'Inactive'}], formatter:'.formatClockOut'}"/>
+                                <Text text="{ClientId}"/>
                                 <Text text="{TaskDesc}"/>
                             </cells>
                         </ColumnListItem>

@@ -24,6 +24,13 @@
           "localUri": "localService/mainService/metadata.xml",
           "odataVersion": "2.0"
         }
+      },
+      "authService": {
+        "uri": "/sap/opu/odata/sap/ZAUTH_SRV/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -64,10 +71,17 @@
           "bundleName": "employeetimemanagement.i18n.i18n"
         }
       },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {}
+"": {
+  "dataSource": "mainService",
+  "preload": true,
+  "settings": {
+    "useBatch": false
+  }
+}
+,
+      "auth": {
+        "dataSource": "authService",
+        "preload": true
       }
     },
     "resources": {
@@ -80,6 +94,9 @@
         },
         { 
           "uri": "css/timeRecordTable.css" 
+        },
+        {
+          "uri": "css/managerDashboard.css"
         }
       ]
     },
@@ -116,6 +133,11 @@
           "target": [
             "TargetTimeRecordTable"
           ]
+        },
+        {
+          "name": "RouteManagerDashboard",
+          "pattern": "manager",
+          "target": ["TargetManagerDashboard"]
         }
       ],
       "targets": {
@@ -130,8 +152,12 @@
         "TargetTimeRecordTable": {
           "id": "TimeRecordTable",
           "name": "TimeRecordTable"
-        }
+        },
+        "TargetManagerDashboard": {
+          "id": "ManagerDashboard",
+          "name": "ManagerDashboard"
       }
+    }
     },
     "rootView": {
       "viewName": "employeetimemanagement.view.App",

@@ -1,0 +1,71 @@
+/* ===== Page layout ===== */
+.managerPage {
+    padding: 1.5rem;
+    background-color: #f7f9fc;
+}
+
+/* ===== Header ===== */
+.managerHeaderBox {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #f5f7fa, #ffffff);
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.managerTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.managerIcon {
+    color: #0070f2;
+    flex-shrink: 0;
+}
+
+.managerTitle {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.managerSubtitle {
+    color: #6a6d70;
+    font-size: 1.05rem;
+    margin-top: 0.2rem;
+}
+
+/* ===== Employee Grid ===== */
+.employeeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+/* ===== Employee Card ===== */
+.employeeCard {
+    border-radius: 12px;
+    padding: 1.4rem;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.employeeCard:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.14);
+}
+
+.employeeName {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.employeeId {
+    color: #6a6d70;
+    margin-bottom: 0.8rem;
+}
+
+.employeeBtn {
+    margin-top: 0.6rem;
+}

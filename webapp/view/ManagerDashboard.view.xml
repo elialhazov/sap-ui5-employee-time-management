@@ -1,0 +1,70 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.ManagerDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page title="Manager Dashboard" class="managerPage">
+
+        <content>
+
+            <!-- ===== Manager Header ===== -->
+            <VBox class="managerHeader">
+
+                <HBox
+                    alignItems="Center"
+                    class="managerTitleRow">
+
+                    <core:Icon
+                        src="sap-icon://manager"
+                        size="2.5rem"
+                        class="managerIcon"/>
+
+                    <VBox>
+                        <Title
+                            text="Manager Dashboard"
+                            level="H1"
+                            class="managerTitle"/>
+
+                        <Text
+                            text="Overview and supervision of employees work activity"
+                            class="managerSubtitle"/>
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+            <!-- ===== Employees Grid ===== -->
+            <VBox
+                class="employeeGrid"
+                items="{/EmployeeSet}"
+                renderType="Bare">
+
+                <items>
+                    <VBox class="employeeCard">
+
+                        <Text
+                            text="{Name}"
+                            class="employeeName"/>
+
+                        <Text
+                            text="Employee ID: {EmployeeId}"
+                            class="employeeId"/>
+
+                        <Button
+                            text="View Details"
+                            type="Emphasized"
+                            icon="sap-icon://inspect"
+                            class="employeeBtn"
+                            press=".onViewEmployee"/>
+                    </VBox>
+                </items>
+
+            </VBox>
+
+        </content>
+    </Page>
+
+</mvc:View>

@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
 ], function (Controller, MessageToast, MessageBox) {
     "use strict";
 
@@ -26,15 +26,21 @@ sap.ui.define([
             }, {
                 success: function (oData) {
                     // Login successful
-                    MessageToast.show("Login successful");
+                   MessageToast.show("Login successful");
 
                     let sEmployeeId = oData.EmployeeId;
+                    let sRole = oData.Role;
+
+                    if (sRole === "MANAGER") {
+                        this.getOwnerComponent().getRouter().navTo("RouteManagerDashboard");
+                        return;
+                }
 
                     // Navigate to employee detail page
                     this.getOwnerComponent().getRouter().navTo("RouteTimeManagement", {
                         employeeId: sEmployeeId
-                    });
-                }.bind(this),
+                    }); 
+                }.bind(this), 
                 error: function (oError) {
                     MessageBox.error("Login failed: invalid Name or Password");
                 }

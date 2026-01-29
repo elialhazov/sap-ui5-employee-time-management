@@ -2,11 +2,12 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "employeetimemanagement/util/TimeFormatter",
+    "employeetimemanagement/util/TimeFormatter"
 ], function (Controller, Filter, FilterOperator, TimeFormatter) {
     "use strict";
 
     return Controller.extend("employeetimemanagement.controller.TimeManagement", {
+
         formatTime: TimeFormatter.formatTime,
         formatClockOut: TimeFormatter.formatClockOut,
         formatDate: TimeFormatter.formatDate,
@@ -14,51 +15,49 @@ sap.ui.define([
 
         onInit: function () {
             let oRouter = this.getOwnerComponent().getRouter();
-            oRouter.getRoute("RouteTimeManagement").attachPatternMatched(this._onObjectMatched, this);
+            oRouter.getRoute("RouteTimeManagement")
+                   .attachPatternMatched(this._onObjectMatched, this);
         },
 
         _onObjectMatched: function (oEvent) {
             this._sEmployeeId = oEvent.getParameter("arguments").employeeId;
-            let oTable = this.byId("timeRecordTable");
-            let oBinding = oTable.getBinding("items");
+
+            const oTable   = this.byId("timeRecordTable");
+            const oBinding = oTable.getBinding("items");
 
             if (oBinding) {
-                let oFilter = new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId);
-                oBinding.filter([oFilter]);
-
-                const oModel = this.getView().getModel();
-                oModel.read("/TimeRecordSet", {
-                    filters: [
-                        new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
-                    ],
-                    success: (oData) => {
-                        const activeLog = oData.results.find(r => !r.Inactive);
-                        if (activeLog) {
-                            this._oActiveLog = activeLog || null;
-                            // this._bHasActiveLog = true;
-                            // this._sActiveLogId = activeLog.LogId;
-                            this._toggleControls(!this._oActiveLog.Inactive);
-                            this._startElapsedTimer(activeLog.ClockIn);
-                            console.log("Active log (" + this._oActiveLog.LogId  + ") for employee " + this._oActiveLog.EmployeeId + ": " + !this._oActiveLog.Inactive);
-                            if (activeLog.ClientName) {
-                                let oComboBox = this.byId("cbClient");
-                                oComboBox.setValue(activeLog.ClientName);
-                            }
-                            if (activeLog.TaskDesc) {
-                                this.byId("inpTaskDesc").setValue(activeLog.TaskDesc);
-                            }
-                        } else {
-                            // this._bHasActiveLog = false;
-                            // this._sActiveLogId = null;
-                        }
-                    }   
-                });
+                oBinding.filter([
+                    new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
+                ]);
             }
 
-            let oComboBox = this.byId("cbClient");
-            oComboBox.bindItems({
+            const oModel = this.getView().getModel();
+            oModel.read("/TimeRecordSet", {
+                filters: [
+                    new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
+                ],
+                success: (oData) => {
+                    const activeLog = oData.results.find(r => !r.Inactive);
+                    if (activeLog) {
+                        this._oActiveLog = activeLog;
+                        this._toggleControls(true);
+                        this._startElapsedTimer(activeLog.ClockIn);
+
+                        if (activeLog.ClientId) {
+                            this.byId("cbClient").setSelectedKey(activeLog.ClientId);
+                        }
+                        if (activeLog.TaskDesc) {
+                            this.byId("inpTaskDesc").setValue(activeLog.TaskDesc);
+                        }
+                    }
+                }
+            });
+
+            this.byId("cbClient").bindItems({
                 path: "/EmployeeClientSet",
-                filters: [new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)],
+                filters: [
+                    new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
+                ],
                 template: new sap.ui.core.ListItem({
                     key: "{ClientId}",
                     text: "{ClientName}"
@@ -66,24 +65,19 @@ sap.ui.define([
             });
         },
 
-        onNavigateToRecords: function() {
+        onNavigateToRecords: function () {
             this.getOwnerComponent().getRouter().navTo("RouteTimeRecordTable", {
                 employeeId: this._sEmployeeId
             });
         },
 
-        _updateControlStates: function(bHasActiveLog, bManual) {
+        _updateControlStates: function (bHasActiveLog, bManual) {
             this.byId("cbClient").setEnabled(!bHasActiveLog);
             this.byId("inpTaskDesc").setEnabled(!bHasActiveLog);
-            
-            if (bManual) {
-                this.byId("btnStart").setEnabled(false);
-                this.byId("btnStop").setEnabled(false);
-            } else {
-                this.byId("btnStart").setEnabled(!bHasActiveLog);
-                this.byId("btnStop").setEnabled(bHasActiveLog);
-            }
-            
+
+            this.byId("btnStart").setEnabled(!bHasActiveLog && !bManual);
+            this.byId("btnStop").setEnabled(bHasActiveLog && !bManual);
+
             this.byId("dpWorkDate").setEnabled(bManual);
             this.byId("tpClockIn").setEnabled(bManual);
             this.byId("tpClockOut").setEnabled(bManual);
@@ -91,195 +85,164 @@ sap.ui.define([
             this.byId("swManualMode").setEnabled(!bHasActiveLog);
         },
 
-        _toggleControls: function(bHasActiveLog) {
+        _toggleControls: function (bHasActiveLog) {
             this._updateControlStates(bHasActiveLog, false);
         },
 
-        onModeToggle: function(oEvent) {
-            let bManual = oEvent.getParameter("state");
-            let bHasActiveLog = this._oActiveLog ? !this._oActiveLog.Inactive : false;
+        onModeToggle: function (oEvent) {
+            const bManual = oEvent.getParameter("state");
+            const bHasActiveLog = this._oActiveLog && !this._oActiveLog.Inactive;
             this._updateControlStates(bHasActiveLog, bManual);
-            // this.byId("autoModeBox").setVisible(!bManual);
 
             const oAutoBox = this.byId("autoModeBox");
-
-            if (bManual) {
-                // Collapse with animation
-                oAutoBox.$().slideUp(300); // 300ms animation
-            } else {
-                // Expand with animation
-                oAutoBox.$().slideDown(300);
-            }
+            bManual ? oAutoBox.$().slideUp(300) : oAutoBox.$().slideDown(300);
         },
+
+        // onStartPress: function () {
+        //     console.log("START CLICKED");
+        //     const oModel = this.getView().getModel();
+
+        //     const oPayload = {
+        //         EmployeeId : this._sEmployeeId,
+        //         WorkDate   : TimeFormatter.toODataDate(new Date()),
+        //         ClockIn    : TimeFormatter.toODataTimeNow(),
+        //         ClientId   : this.byId("cbClient").getSelectedKey(),
+        //         TaskDesc   : this.byId("inpTaskDesc").getValue()
+        //     };
+
+        //     for (const v of Object.values(oPayload)) {
+        //         if (!v) {
+        //             sap.m.MessageBox.error("All fields are required");
+        //             return;
+        //         }
+        //     }
+
+        //     oModel.create("/TimeRecordSet", oPayload, {
+        //         success: (oData) => {
+        //             this._oActiveLog = oData;
+        //             this._toggleControls(true);
+        //             this._startElapsedTimer(new Date());
+        //             oModel.refresh();
+        //         },
+        //         error: (e) => sap.m.MessageBox.error(e.message)
+        //     });
+        // },
 
         onStartPress: function () {
+    const oModel = this.getView().getModel();
+
+    const oPayload = {
+        EmployeeId : this._sEmployeeId,
+        WorkDate   : TimeFormatter.toODataDate(new Date()),
+        ClockIn    : TimeFormatter.toODataTimeNow(),
+        Inactive   : false,
+        ClientId   : this.byId("cbClient").getSelectedKey(),
+        TaskDesc   : this.byId("inpTaskDesc").getValue()
+    };
+
+    // Validation (do not allow empty values)
+    if (!oPayload.ClientId) {
+        sap.m.MessageBox.error("Please select Client");
+        return;
+    }
+
+    if (!oPayload.TaskDesc) {
+        sap.m.MessageBox.error("Please enter Task");
+        return;
+    }
+
+    oModel.create("/TimeRecordSet", oPayload, {
+        success: (oData) => {
+            this._oActiveLog = oData;
+            this._toggleControls(true);
+            this._startElapsedTimer(new Date());
+            oModel.refresh();
+        },
+        error: (e) => {
+            sap.m.MessageBox.error("Failed to start timer");
+        }
+    });
+},
+
+        
+
+        onStopPress: function () {
+            if (!this._oActiveLog) return;
+
             const oModel = this.getView().getModel();
-            const sEmployeeId = this._sEmployeeId;
-            const sClockIn = TimeFormatter.toODataTimeNow();
-
-            const oPayload = {
-                EmployeeId : sEmployeeId,
-                WorkDate   : TimeFormatter.toODataDate(new Date()),
-                DayName    : TimeFormatter.toDayName(new Date()),
-                ClockIn    : sClockIn,         
-                ClientName : this.byId("cbClient").getSelectedItem()?.getText(),
-                TaskDesc   : this.byId("inpTaskDesc").getValue()
-            };
-
-            for (const [key, value] of Object.entries(oPayload)) {
-                if (value === null || value === undefined || value === "") {
-                    sap.m.MessageBox.error(`${key.replace(/([A-Z])/g, ' $1')} is required.`);
-                    return;
+            oModel.update(
+                `/TimeRecordSet('${this._oActiveLog.LogId}')`,
+                { ClockOut: TimeFormatter.toODataTimeNow() },
+                {
+                    success: () => {
+                        this._oActiveLog = null;
+                        this._toggleControls(false);
+                        this._stopElapsedTimer();
+                        oModel.refresh();
+                    }
                 }
-            }
-
-            oModel.create("/TimeRecordSet", oPayload, {
-                success: (oData) => {
-                    sap.m.MessageToast.show(this.getView().getModel("i18n").getProperty("recordStarted"));
-                    this._oActiveLog = oData;
-                    oModel.refresh();
-                    this._toggleControls(true);
-                    this._startElapsedTimer(new Date());
-                },
-                error: (oError) => {
-                    sap.m.MessageBox.error(oError.message);
-                }
-            });
+            );
         },
 
-        onStopPress: function() {
-            if (this._oActiveLog.Inactive) return;
-
-            const oModel = this.getView().getModel();
-            const sLogId = this._oActiveLog.LogId;
-            const sClockIn = this._oActiveLog.ClockIn;
-            const sClockOut = TimeFormatter.toODataTimeNow();
-
-            const oPayload = {
-                ClockOut   : sClockOut,
-                TotalHours : TimeFormatter.calcTotalHours(TimeFormatter.formatTime(sClockIn), TimeFormatter.formatTime(sClockOut))
-            };
-
-            oModel.update("/TimeRecordSet('" + sLogId + "')", oPayload, {
-                success: () => {
-                    sap.m.MessageToast.show(this.getView().getModel("i18n").getProperty("recordAdded"));
-                    oModel.refresh();
-                    this._oActiveLog = null;
-                    this._toggleControls(false);
-                    this._stopElapsedTimer();
-                },
-                error: (oError) => {
-                    sap.m.MessageBox.error(oError.message);
-                }
-            });
-        },
-
-        _startElapsedTimer: function(clockIn) {
+        _startElapsedTimer: function (clockIn) {
             if (this._timerInterval) {
                 clearInterval(this._timerInterval);
             }
 
-            if (clockIn instanceof Date) {
-                this._startDate = clockIn;
-            } else {
-                // parse server string to Date
-                this._startDate = TimeFormatter.toDateFromODataTime(clockIn);
-            }
+            this._startDate = clockIn instanceof Date
+                ? clockIn
+                : TimeFormatter.toDateFromODataTime(clockIn);
 
-            // immediate update so we show 0:00:00 right away if startDate === now
-            this.byId("txtTimer").setText(TimeFormatter.formatElapsed(this._startDate));
+            this.byId("txtTimer")
+                .setText(TimeFormatter.formatElapsed(this._startDate));
 
             this._timerInterval = setInterval(() => {
-                this.byId("txtTimer").setText(TimeFormatter.formatElapsed(this._startDate));
+                this.byId("txtTimer")
+                    .setText(TimeFormatter.formatElapsed(this._startDate));
             }, 1000);
         },
-        
-        _stopElapsedTimer: function() {
-            if (this._timerInterval) {
-                clearInterval(this._timerInterval);
-                this._timerInterval = null;
-            }
+
+        _stopElapsedTimer: function () {
+            clearInterval(this._timerInterval);
+            this._timerInterval = null;
             this.byId("txtTimer").setText("0:00:00");
         },
 
-
-        onInputChange: function () {
-            const oDate     = this.byId("dpWorkDate").getDateValue();
-            const sClockIn  = this.byId("tpClockIn").getValue();
-            const sClockOut = this.byId("tpClockOut").getValue();
-
-            const sDayName    = TimeFormatter.toDayName(oDate);
-            const sTotalHours = TimeFormatter.calcTotalHours(sClockIn, sClockOut);
-
-            this.byId("txtDayName").setText(sDayName || "");
-            this.byId("txtTotalHours").setText(sTotalHours || "");
-        },
-        
         onAddTimeRecord: function () {
             const oModel = this.getView().getModel();
-            const sEmployeeId = this._sEmployeeId;
-
-            const oDate       = this.byId("dpWorkDate").getDateValue();
-            const sClockIn    = this.byId("tpClockIn").getValue();
-            const sClockOut   = this.byId("tpClockOut").getValue();
-            const sClientName = this.byId("cbClient").getSelectedItem()?.getText() || "";
-            const sTaskDesc   = this.byId("inpTaskDesc").getValue()
 
             const oPayload = {
-                EmployeeId : sEmployeeId,
-                WorkDate   : TimeFormatter.toODataDate(oDate),
-                DayName    : TimeFormatter.toDayName(oDate),
-                ClockIn    : TimeFormatter.toODataTime(sClockIn),
-                ClockOut   : TimeFormatter.toODataTime(sClockOut),
-                TotalHours : TimeFormatter.calcTotalHours(sClockIn, sClockOut),
-                ClientName : sClientName,
-                TaskDesc   : sTaskDesc,
+                EmployeeId : this._sEmployeeId,
+                WorkDate   : TimeFormatter.toODataDate(this.byId("dpWorkDate").getDateValue()),
+                ClockIn    : TimeFormatter.toODataTime(this.byId("tpClockIn").getValue()),
+                ClockOut   : TimeFormatter.toODataTime(this.byId("tpClockOut").getValue()),
+                ClientId   : this.byId("cbClient").getSelectedKey(),
+                TaskDesc   : this.byId("inpTaskDesc").getValue()
             };
-            
-            for (const [key, value] of Object.entries(oPayload)) {
-                if (value === null || value === undefined || value === "") {
-                    sap.m.MessageBox.error(`${key.replace(/([A-Z])/g, ' $1')} is required.`);
+
+            for (const v of Object.values(oPayload)) {
+                if (!v) {
+                    sap.m.MessageBox.error("All fields are required");
                     return;
                 }
             }
 
             oModel.create("/TimeRecordSet", oPayload, {
                 success: () => {
-                    sap.m.MessageToast.show(this.getView().getModel("i18n").getProperty("recordAdded"));
-                    oModel.refresh(); // refresh table
+                    oModel.refresh();
                     this._clearFields();
-                },
-                error: (oError) => {
-                    let sMsg = (oError.responseText && JSON.parse(oError.responseText).error?.innererror?.errordetails?.[0]?.message) 
-                            || oError.message 
-                            || "Unknown error";
-                    sap.m.MessageBox.error(sMsg);
                 }
             });
         },
 
-        _clearFields: function() {
-            const oComboBox = this.byId("cbClient");
-            if (oComboBox) oComboBox.setSelectedKey("");
-
-            const oTaskInput = this.byId("inpTaskDesc");
-            if (oTaskInput) oTaskInput.setValue("");
-
-            const oDatePicker = this.byId("dpWorkDate");
-            if (oDatePicker) oDatePicker.setDateValue("");
-
-            const oClockIn = this.byId("tpClockIn");
-            if (oClockIn) oClockIn.setValue("");
-
-            const oClockOut = this.byId("tpClockOut");
-            if (oClockOut) oClockOut.setValue("");
-
-            const oTimer = this.byId("txtTimer");
-            if (oTimer) oTimer.setText("0:00:00");
-
-            this.byId("txtDayName").setText("");
-            this.byId("txtTotalHours").setText("");
+        _clearFields: function () {
+            this.byId("cbClient").setSelectedKey("");
+            this.byId("inpTaskDesc").setValue("");
+            this.byId("dpWorkDate").setDateValue(null);
+            this.byId("tpClockIn").setValue("");
+            this.byId("tpClockOut").setValue("");
+            this.byId("txtTimer").setText("0:00:00");
         }
-
     });
 });
+
