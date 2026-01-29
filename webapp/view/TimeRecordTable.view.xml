@@ -83,7 +83,7 @@
                 class="sapUiResponsiveContentPadding"
                 enableAutoColumnWidth="true"
                 ignoredFields="EmployeeId,LogId,Inactive,ClockIn,ClockOut"
-                initiallyVisibleFields="WorkDate,ClientId,TaskDesc"
+                initiallyVisibleFields="WorkDate,TaskDesc"
                 showPasteButton="false">
 
                 <!-- Inner sap.m.Table required for ResponsiveTable -->
@@ -157,9 +157,9 @@
                             <customData>
                                 <core:CustomData
                                     key="p13nData"
-                                    value='{"columnKey": "ClientId", "leadingProperty": "ClientId", "sortProperty": "ClientId"}' />
+                                    value='{"columnKey": "Client", "leadingProperty": "ClientId", "sortProperty": "ClientId"}' />
                             </customData>
-                            <Text text="{i18n>clientId}" />
+                            <Text text="{i18n>client}" />
                         </Column>
 
                         <Column>
@@ -182,7 +182,11 @@
                                 <Text text="{parts:[{path:'ClockOut'},{path:'Inactive'}], formatter:'.formatClockOut'}"/>
                                  <Text text="{parts:[{path:'ClockIn'},{path:'ClockOut'}], formatter:'.formatTotalTime'}"/>
                                 <!-- <Text text="{TotalHours}"/> -->
-                                <Text text="{ClientId}"/>
+                                <Text
+                                text="{
+                                    path: 'ClientId',
+                                    formatter: '.formatClientName'
+                                }"/>
                                 <Text text="{TaskDesc}"/>
                             </cells>
                         </ColumnListItem>

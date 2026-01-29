@@ -79,32 +79,37 @@ formatTotalTime: function (vClockIn, vClockOut) {
         /* Route                                                       */
         /* =========================================================== */
 
-        _onRouteMatched: function (oEvent) {
-            this._sEmployeeId = oEvent.getParameter("arguments").employeeId;
-            const oSmartTable = this.byId("smartTimeRecordTable");
+_onRouteMatched: function (oEvent) {
+    this._sEmployeeId = oEvent.getParameter("arguments").employeeId;
 
-            // === NEW: load clients once ===
-            this._loadEmployeeClients();
+    const oSmartTable = this.byId("smartTimeRecordTable");
+
+    if (this._bBeforeRebindAttached) {
+        return;
+    }
+
+    this._bBeforeRebindAttached = true;
+
+    this._loadEmployeeClients();
 
 oSmartTable.attachBeforeRebindTable((oEvent) => {
     const oBindingParams = oEvent.getParameter("bindingParams");
 
-    oBindingParams.filters = [];
+    if (!oBindingParams.filters) {
+        oBindingParams.filters = [];
+    }
 
-    // חובה: Employee
     oBindingParams.filters.push(
-        new sap.ui.model.Filter("EmployeeId", sap.ui.model.FilterOperator.EQ, this._sEmployeeId)
+        new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
     );
 
-    // חודש / שנה
     if (this._oMonthYearFilter) {
         oBindingParams.filters.push(...this._oMonthYearFilter);
     }
 });
 
-
-
-        },
+}
+,
 
         /* =========================================================== */
         /* Load Clients (ClientId → ClientName)                        */
@@ -172,13 +177,18 @@ onApplyMonthYearFilter: function () {
     }
 
     const iYear  = parseInt(sYear, 10);
-    const iMonth = parseInt(sMonth, 10) - 1; // JS month is 0-based
+    const iMonth = parseInt(sMonth, 10) - 1;
 
     const dFrom = new Date(iYear, iMonth, 1);
     const dTo   = new Date(iYear, iMonth + 1, 0, 23, 59, 59);
 
     this._oMonthYearFilter = [
-        new sap.ui.model.Filter("WorkDate", sap.ui.model.FilterOperator.BT, dFrom, dTo)
+        new sap.ui.model.Filter(
+            "WorkDate",
+            sap.ui.model.FilterOperator.BT,
+            dFrom,
+            dTo
+        )
     ];
 
     this.byId("smartTimeRecordTable").rebindTable();
@@ -186,11 +196,14 @@ onApplyMonthYearFilter: function () {
 
 
 
+
 onClearMonthYearFilter: function () {
     this._oMonthYearFilter = null;
 
     this.byId("selMonth").setSelectedKey("");
-    this.byId("selYear").setSelectedKey(new Date().getFullYear().toString());
+    this.byId("selYear").setSelectedKey(
+        new Date().getFullYear().toString()
+    );
 
     this.byId("smartTimeRecordTable").rebindTable();
 }

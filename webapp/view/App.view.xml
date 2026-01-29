@@ -2,6 +2,28 @@
     displayBlock="true"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <App id="app">
+  <App id="app">
+        <pages>
+            <Page showHeader="false">
+                <customHeader>
+                    <Bar design="Header">
+                        <contentLeft>
+                            <Image
+                                src="assets/dicomano-logo.png"
+                                height="36px"
+                                decorative="false"/>
+                        </contentLeft>
+
+                        <contentMiddle>
+                            <Title text="Employee Time Management"/>
+                        </contentMiddle>
+                    </Bar>
+                </customHeader>
+
+                <content>
+                    <mvc:XMLView viewName="employeetimemanagement.view.Login"/>
+                </content>
+            </Page>
+        </pages>
     </App>
 </mvc:View>

@@ -2,11 +2,45 @@
     controllerName="employeetimemanagement.controller.Login"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    
-    <VBox class="sapUiSmallMargin" justifyContent="Center" alignItems="Center">
-        <Input id="inputName" placeholder="{i18n>name}" width="300px"/>
-        <Input id="inputPassword" placeholder="{i18n>password}" type="Password" width="300px"/>
-        <Button text="{i18n>loginButton}" press=".onLoginPress"/>
-        <Button text="{i18n>forgotPassword}" press=".onForgotPasswordPress" type="Transparent"/>
+
+    <VBox
+        height="100%"
+        justifyContent="Center"
+        alignItems="Center"
+        class="loginContainer">
+
+        <!-- LOGO -->
+        <Image
+            src="assets/dicomano-logo.png"
+            width="220px"
+            class="loginLogo"/>
+
+        <!-- LOGIN FORM -->
+        <VBox class="loginForm" alignItems="Center">
+            <Input
+                id="inputName"
+                placeholder="{i18n>name}"
+                width="300px"/>
+
+            <Input
+                id="inputPassword"
+                placeholder="{i18n>password}"
+                type="Password"
+                width="300px"
+                class="sapUiSmallMarginTop"/>
+
+            <Button
+                text="{i18n>loginButton}"
+                press=".onLoginPress"
+                width="300px"
+                class="sapUiSmallMarginTop"/>
+
+            <Button
+                text="{i18n>forgotPassword}"
+                press=".onForgotPasswordPress"
+                type="Transparent"
+                class="sapUiSmallMarginTop"/>
+        </VBox>
+
     </VBox>
 </mvc:View>
