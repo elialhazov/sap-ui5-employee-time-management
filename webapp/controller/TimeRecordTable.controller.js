@@ -197,8 +197,8 @@ _onRouteMatched: function (oEvent) {
 
 onApplyMonthYearFilter: function () {
 
-    const sYear  = this.byId("selYear").getSelectedKey();
-    const sMonth = this.byId("selMonth").getSelectedKey();
+    const sYear  = this.byId("selYear").getSelectedKey();  // "2026"
+    const sMonth = this.byId("selMonth").getSelectedKey(); // "01"
 
     if (!sYear || !sMonth) {
         sap.m.MessageToast.show("Please select month and year");
@@ -208,30 +208,46 @@ onApplyMonthYearFilter: function () {
     const iYear  = parseInt(sYear, 10);
     const iMonth = parseInt(sMonth, 10) - 1;
 
-    // === calculate standard (NEW) ===
-    const oStandard = this._calculateMonthlyStandard(iYear, iMonth);
+    const oModel = this.getView().getModel();
 
-    this.getView().getModel("standard").setData({
-        visible: true,
-        workDays: oStandard.workDays,
-        hours: oStandard.hours
-    });
+    // ================================
+    // ✅ LOAD MONTHLY STANDARD (KEY BASED)
+    // ================================
+    oModel.read(
+        `/MonthlyStandardSet(YYear='${sYear}',MMonth='${sMonth}')`,
+        {
+            success: (oData) => {
+                this.getView().getModel("standard").setData({
+                    visible: true,
+                    hours: oData.StdHours   // ← 189 / 169 / וכו'
+                });
+            },
+            error: () => {
+                sap.m.MessageToast.show("Failed to load monthly standard");
 
-    // === existing filter logic (UNCHANGED) ===
+                this.getView().getModel("standard").setData({
+                    visible: true,
+                    hours: 0
+                });
+            }
+        }
+    );
+
+    // ================================
+    // EXISTING TABLE FILTER – לא נוגעים
+    // ================================
     const dFrom = new Date(iYear, iMonth, 1);
     const dTo   = new Date(iYear, iMonth + 1, 0, 23, 59, 59);
 
     this._oMonthYearFilter = [
-        new sap.ui.model.Filter(
-            "WorkDate",
-            sap.ui.model.FilterOperator.BT,
-            dFrom,
-            dTo
-        )
+        new Filter("WorkDate", FilterOperator.BT, dFrom, dTo)
     ];
 
     this.byId("smartTimeRecordTable").rebindTable();
 },
+
+
+
 
 
 
