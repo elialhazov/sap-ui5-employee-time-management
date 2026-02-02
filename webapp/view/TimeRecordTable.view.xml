@@ -4,228 +4,212 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns:smartTable="sap.ui.comp.smarttable"
-    xmlns:smartFilter="sap.ui.comp.smartfilterbar"
-    xmlns:config="sap.ui.comp.config"
+    xmlns:layout="sap.ui.layout"
     displayBlock="true">
 
     <Page title="{i18n>timeRecordsTitle}">
         <content>
 
-            <!-- Add New Record Button -->
-            <Button 
-                text="{i18n>addNewRecord}" 
-                type="Emphasized" 
-                icon="sap-icon://add" 
-                press=".onNavigateToAddRecord"
-                class="timeMgmtNavBtn"/>
+            <!-- Root Responsive Wrapper -->
+            <VBox width="100%" class="sapUiResponsiveContentPadding">
 
-            <!-- Month / Year Filter Bar -->
-            <HBox
-                class="sapUiSmallMarginBottom sapUiSmallMarginTop"
-                alignItems="Center"
-                justifyContent="Start">
+                <!-- Add New Record Button -->
+                <Button 
+                    text="{i18n>addNewRecord}" 
+                    type="Emphasized" 
+                    icon="sap-icon://add" 
+                    press=".onNavigateToAddRecord"
+                    class="timeMgmtNavBtn sapUiSmallMarginBottom"/>
 
-                <Label text="{i18n>year}" class="sapUiSmallMarginEnd"/>
+                <!-- Month / Year Filter Bar -->
+                <layout:Grid
+                    defaultSpan="XL12 L12 M12 S12"
+                    class="sapUiSmallMarginBottom">
 
-                <!-- Year Select (filled dynamically in controller) -->
-                <Select
-                    id="selYear"
-                    width="120px"/>
+                    <!-- MAIN FILTER HBOX -->
+                    <HBox
+                        width="100%"
+                        alignItems="End"
+                        justifyContent="Start"
+                        wrap="Wrap"
+                        class="sapUiSmallMarginTop">
 
-                <Label
-                    text="{i18n>month}"
-                    class="sapUiSmallMarginBegin sapUiSmallMarginEnd"/>
+                        <!-- Year -->
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>year}" />
+                            <Select
+                                id="selYear"
+                                width="120px"/>
+                        </VBox>
 
-                <!-- Month Select -->
-                <Select
-                    id="selMonth"
-                    width="150px">
-                    <core:Item key="01" text="January"/>
-                    <core:Item key="02" text="February"/>
-                    <core:Item key="03" text="March"/>
-                    <core:Item key="04" text="April"/>
-                    <core:Item key="05" text="May"/>
-                    <core:Item key="06" text="June"/>
-                    <core:Item key="07" text="July"/>
-                    <core:Item key="08" text="August"/>
-                    <core:Item key="09" text="September"/>
-                    <core:Item key="10" text="October"/>
-                    <core:Item key="11" text="November"/>
-                    <core:Item key="12" text="December"/>
-                </Select>
+                        <!-- Month -->
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>month}" />
+                            <Select
+                                id="selMonth"
+                                width="150px">
+                                <core:Item key="01" text="January"/>
+                                <core:Item key="02" text="February"/>
+                                <core:Item key="03" text="March"/>
+                                <core:Item key="04" text="April"/>
+                                <core:Item key="05" text="May"/>
+                                <core:Item key="06" text="June"/>
+                                <core:Item key="07" text="July"/>
+                                <core:Item key="08" text="August"/>
+                                <core:Item key="09" text="September"/>
+                                <core:Item key="10" text="October"/>
+                                <core:Item key="11" text="November"/>
+                                <core:Item key="12" text="December"/>
+                            </Select>
+                        </VBox>
 
-                <Button
-                    text="{i18n>applyFilter}"
-                    icon="sap-icon://filter"
-                    type="Emphasized"
-                    class="sapUiSmallMarginBegin"
-                    press=".onApplyMonthYearFilter"/>
+                        <!-- BUTTONS GROUP -->
+                        <HBox
+                            width="100%"
+                            alignItems="End"
+                            class="sapUiTinyMarginTop">
 
-                <Button
-                    text="{i18n>clearFilter}"
-                    icon="sap-icon://clear-filter"
-                    type="Transparent"
-                    class="sapUiSmallMarginBegin"
-                    press=".onClearMonthYearFilter"/>                   
-            </HBox>
+                            <Button
+                                width="auto"
+                                text="{i18n>applyFilter}"
+                                icon="sap-icon://filter"
+                                type="Emphasized"
+                                class="sapUiTinyMarginEnd"
+                                press=".onApplyMonthYearFilter"/>
 
-            <!-- Monthly Standard Box -->
-<!-- Monthly Summary Box -->
-<HBox
-    visible="{standard>/visible}"
-    class="monthlyKpiBar sapUiSmallMarginBottom"
-    alignItems="Center"
-    justifyContent="SpaceBetween">
+                            <Button
+                                width="auto"
+                                text="{i18n>clearFilter}"
+                                icon="sap-icon://clear-filter"
+                                type="Transparent"
+                                press=".onClearMonthYearFilter"/>
 
-    <!-- Monthly Standard -->
-    <VBox class="kpiCard kpiStandard">
-        <Text
-            text="{i18n>monthly Standard}"
-            class="kpiTitle"/>
-        <Text
-            text="{= ${standard>/hours} + ' hours' }"
-            class="kpiValue"/>
-    </VBox>
+                        </HBox>
 
-    <!-- Total Hours -->
-    <VBox class="kpiCard kpiTotal">
-        <Text
-            text="{i18n>totalHours}"
-            class="kpiTitle"/>
-        <Text
-            text="{totals>/hours}"
-            class="kpiValue"/>
-    </VBox>
-</HBox>
+                    </HBox>
+                </layout:Grid>
 
+                <!-- Monthly Summary KPI -->
+                <layout:Grid
+                    visible="{standard>/visible}"
+                    defaultSpan="XL6 L6 M12 S12"
+                    hSpacing="1"
+                    class="sapUiSmallMarginBottom">
 
-            <!-- Smart Table -->
-            <smartTable:SmartTable
-                id="smartTimeRecordTable"
-                entitySet="TimeRecordSet"
-                tableType="ResponsiveTable"
-                enableExport="false"
-                useVariantManagement="true"
-                useTablePersonalisation="true"
-                header="{i18n>timeRecordsTitle}"
-                showRowCount="true"
-                enableAutoBinding="true"
-                class="sapUiResponsiveContentPadding"
-                enableAutoColumnWidth="true"
-                ignoredFields="EmployeeId,LogId,Inactive,ClockIn,ClockOut"
-                initiallyVisibleFields="WorkDate,TaskDesc"
-                showPasteButton="false">
+                    <VBox class="kpiCard kpiStandard">
+                        <Text text="{i18n>monthlyStandard}" class="kpiTitle"/>
+                        <Text text="{= ${standard>/hours} + ' hours' }" class="kpiValue"/>
+                    </VBox>
 
-                <!-- Inner sap.m.Table required for ResponsiveTable -->
-                <Table>
+                    <VBox class="kpiCard kpiTotal">
+                        <Text text="{i18n>totalHours}" class="kpiTitle"/>
+                        <Text text="{totals>/hours}" class="kpiValue"/>
+                    </VBox>
 
+                </layout:Grid>
 
-                    <columns>
-                        <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "WorkDate", "leadingProperty": "WorkDate", "sortProperty": "WorkDate"}' />
-                            </customData>
-                            <Text text="{i18n>workDate}" />
-                        </Column>
+                <!-- Smart Table -->
+                <smartTable:SmartTable
+                    id="smartTimeRecordTable"
+                    entitySet="TimeRecordSet"
+                    tableType="ResponsiveTable"
+                    enableExport="false"
+                    useVariantManagement="true"
+                    useTablePersonalisation="true"
+                    header="{i18n>timeRecordsTitle}"
+                    showRowCount="true"
+                    enableAutoBinding="true"
+                    class="sapUiResponsiveContentPadding"
+                    enableAutoColumnWidth="true"
+                    ignoredFields="EmployeeId,LogId,Inactive,ClockIn,ClockOut"
+                    initiallyVisibleFields="WorkDate,TaskDesc"
+                    showPasteButton="false">
 
+                    <Table growing="true">
 
-                        <Column>
-                            <customData>
-                                 <core:CustomData
-                                     key="p13nData"
-                                     value='{"columnKey":"Day","leadingProperty":"WorkDate"}'/>
-                            </customData>
-                            <Text text="{i18n>dayName}" />
-                        </Column>    
-
-                        <!-- <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "DayName", "leadingProperty": "DayName", "sortProperty": "DayName"}' />
-                            </customData>
-                            <Text text="{i18n>dayName}"/>
-                        </Column> -->
-
-                        <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "ClockIn", "leadingProperty": "ClockIn", "sortProperty": "ClockIn"}' />
-                            </customData>
-                            <Text text="{i18n>clockIn}"/>
-                        </Column>
-
-                        <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "ClockOut", "leadingProperty": "ClockOut", "sortProperty": "ClockOut"}' />
-                            </customData>
-                            <Text text="{i18n>clockOut}"/>
-                        </Column>
-
-                        <!-- <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "TotalHours", "leadingProperty": "TotalHours", "sortProperty": "TotalHours"}' />
-                            </customData>
-                            <Text text="{i18n>totalHours}"/>
-                        </Column> -->
+                        <columns>
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"WorkDate","leadingProperty":"WorkDate","sortProperty":"WorkDate"}'/>
+                                </customData>
+                                <Text text="{i18n>workDate}" />
+                            </Column>
 
                             <Column>
                                 <customData>
-                                  <core:CustomData
-                                     key="p13nData"
-                                     value='{"columnKey":"TotalTime","leadingProperty":"ClockOut"}'/>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"Day","leadingProperty":"WorkDate"}'/>
+                                </customData>
+                                <Text text="{i18n>dayName}" />
+                            </Column>
+
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"ClockIn","leadingProperty":"ClockIn"}'/>
+                                </customData>
+                                <Text text="{i18n>clockIn}" />
+                            </Column>
+
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"ClockOut","leadingProperty":"ClockOut"}'/>
+                                </customData>
+                                <Text text="{i18n>clockOut}" />
+                            </Column>
+
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"TotalTime","leadingProperty":"ClockOut"}'/>
                                 </customData>
                                 <Text text="{i18n>totalTime}" />
                             </Column>
 
-                        <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "Client", "leadingProperty": "ClientId", "sortProperty": "ClientId"}' />
-                            </customData>
-                            <Text text="{i18n>client}" />
-                        </Column>
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"Client","leadingProperty":"ClientId"}'/>
+                                </customData>
+                                <Text text="{i18n>client}" />
+                            </Column>
 
-                        <Column>
-                            <customData>
-                                <core:CustomData
-                                    key="p13nData"
-                                    value='{"columnKey": "TaskDesc", "leadingProperty": "TaskDesc", "sortProperty": "TaskDesc"}' />
-                            </customData>
-                            <Text text="{i18n>taskDesc}" />
-                        </Column>
-                    </columns>
+                            <Column>
+                                <customData>
+                                    <core:CustomData
+                                        key="p13nData"
+                                        value='{"columnKey":"TaskDesc","leadingProperty":"TaskDesc"}'/>
+                                </customData>
+                                <Text text="{i18n>taskDesc}" />
+                            </Column>
+                        </columns>
 
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="{path:'WorkDate', formatter:'.formatDate'}"/>
-                                <Text text="{path:'WorkDate', formatter:'.formatDayFromDate'}"/>
-                                <!-- <Text text="{path:'DayName', formatter:'.formatDayName'}"/> -->
-                                <Text text="{path:'ClockIn', formatter:'.formatTime'}"/>
-                                <Text text="{parts:[{path:'ClockOut'},{path:'Inactive'}], formatter:'.formatClockOut'}"/>
-                                 <Text text="{parts:[{path:'ClockIn'},{path:'ClockOut'}], formatter:'.formatTotalTime'}"/>
-                                <!-- <Text text="{TotalHours}"/> -->
-                                <Text
-                                text="{
-                                    path: 'ClientId',
-                                    formatter: '.formatClientName'
-                                }"/>
-                                <Text text="{TaskDesc}"/>
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                    
-                </Table>
-            </smartTable:SmartTable>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path:'WorkDate', formatter:'.formatDate'}"/>
+                                    <Text text="{path:'WorkDate', formatter:'.formatDayFromDate'}"/>
+                                    <Text text="{path:'ClockIn', formatter:'.formatTime'}"/>
+                                    <Text text="{parts:[{path:'ClockOut'},{path:'Inactive'}], formatter:'.formatClockOut'}"/>
+                                    <Text text="{parts:[{path:'ClockIn'},{path:'ClockOut'}], formatter:'.formatTotalTime'}"/>
+                                    <Text text="{path:'ClientId', formatter:'.formatClientName'}"/>
+                                    <Text text="{TaskDesc}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+
+                    </Table>
+                </smartTable:SmartTable>
+
+            </VBox>
         </content>
     </Page>
 </mvc:View>
