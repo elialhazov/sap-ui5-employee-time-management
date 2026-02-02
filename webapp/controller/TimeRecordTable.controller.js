@@ -64,16 +64,35 @@ formatTotalTime: function (vClockIn, vClockOut) {
         
 
         onInit: function () {
-            const oRouter = this.getOwnerComponent().getRouter();
-            oRouter.getRoute("RouteTimeRecordTable")
-                .attachPatternMatched(this._onRouteMatched, this);
+    const oRouter = this.getOwnerComponent().getRouter();
+    oRouter.getRoute("RouteTimeRecordTable")
+        .attachPatternMatched(this._onRouteMatched, this);
 
-            this._initYearSelect();
-            this._oMonthYearFilter = null;
+    this._initYearSelect();
+    this._oMonthYearFilter = null;
 
-            // === NEW: cache for ClientId → ClientName ===
-            this._mClientMap = {};
-        },
+    // === Cache for ClientId → ClientName ===
+    this._mClientMap = {};
+
+    // === Monthly standard model ===
+    this.getView().setModel(
+        new sap.ui.model.json.JSONModel({
+            visible: false,
+            workDays: 0,
+            hours: 0
+        }),
+        "standard"
+    );
+
+    // === Total hours model ===
+    this.getView().setModel(
+        new sap.ui.model.json.JSONModel({
+            hours: "00:00"
+        }),
+        "totals"
+    );
+},
+
 
         /* =========================================================== */
         /* Route                                                       */
@@ -84,32 +103,41 @@ _onRouteMatched: function (oEvent) {
 
     const oSmartTable = this.byId("smartTimeRecordTable");
 
+    // Prevent double attach
     if (this._bBeforeRebindAttached) {
         return;
     }
-
     this._bBeforeRebindAttached = true;
 
+    // Load employee clients once
     this._loadEmployeeClients();
 
-oSmartTable.attachBeforeRebindTable((oEvent) => {
-    const oBindingParams = oEvent.getParameter("bindingParams");
+    // === Apply filters before OData rebind ===
+    oSmartTable.attachBeforeRebindTable((oEvent) => {
+        const oBindingParams = oEvent.getParameter("bindingParams");
 
-    if (!oBindingParams.filters) {
-        oBindingParams.filters = [];
-    }
+        if (!oBindingParams.filters) {
+            oBindingParams.filters = [];
+        }
 
-    oBindingParams.filters.push(
-        new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
-    );
+        // Always filter by employee
+        oBindingParams.filters.push(
+            new Filter("EmployeeId", FilterOperator.EQ, this._sEmployeeId)
+        );
 
-    if (this._oMonthYearFilter) {
-        oBindingParams.filters.push(...this._oMonthYearFilter);
-    }
-});
+        // Month / Year filter (optional)
+        if (this._oMonthYearFilter) {
+            oBindingParams.filters.push(...this._oMonthYearFilter);
+        }
+    });
 
-}
-,
+    // === Calculate total hours after table update ===
+    const oTable = oSmartTable.getTable();
+    oTable.attachUpdateFinished(() => {
+        this._calculateTotalHours();
+    });
+},
+
 
         /* =========================================================== */
         /* Load Clients (ClientId → ClientName)                        */
@@ -168,6 +196,7 @@ oSmartTable.attachBeforeRebindTable((oEvent) => {
         /* =========================================================== */
 
 onApplyMonthYearFilter: function () {
+
     const sYear  = this.byId("selYear").getSelectedKey();
     const sMonth = this.byId("selMonth").getSelectedKey();
 
@@ -179,6 +208,16 @@ onApplyMonthYearFilter: function () {
     const iYear  = parseInt(sYear, 10);
     const iMonth = parseInt(sMonth, 10) - 1;
 
+    // === calculate standard (NEW) ===
+    const oStandard = this._calculateMonthlyStandard(iYear, iMonth);
+
+    this.getView().getModel("standard").setData({
+        visible: true,
+        workDays: oStandard.workDays,
+        hours: oStandard.hours
+    });
+
+    // === existing filter logic (UNCHANGED) ===
     const dFrom = new Date(iYear, iMonth, 1);
     const dTo   = new Date(iYear, iMonth + 1, 0, 23, 59, 59);
 
@@ -196,8 +235,14 @@ onApplyMonthYearFilter: function () {
 
 
 
-
 onClearMonthYearFilter: function () {
+    this.getView().getModel("standard").setData({
+    visible: false,
+    workDays: 0,
+    hours: 0
+});
+
+
     this._oMonthYearFilter = null;
 
     this.byId("selMonth").setSelectedKey("");
@@ -218,7 +263,64 @@ onClearMonthYearFilter: function () {
             this.getOwnerComponent().getRouter().navTo("RouteTimeManagement", {
                 employeeId: this._sEmployeeId
             });
+        },
+
+ _calculateMonthlyStandard: function (iYear, iMonth) {
+    let iWorkDays = 0;
+    const oDate = new Date(iYear, iMonth, 1);
+
+    while (oDate.getMonth() === iMonth) {
+        const iDay = oDate.getDay(); 
+        // 0=Sunday … 6=Saturday
+
+        if (iDay >= 0 && iDay <= 4) {
+            // Sunday–Thursday
+            iWorkDays++;
         }
+
+        oDate.setDate(oDate.getDate() + 1);
+    }
+
+    return {
+        workDays: iWorkDays,
+        hours: iWorkDays * 9
+    };
+},
+
+_calculateTotalHours: function () {
+    const oTable = this.byId("smartTimeRecordTable").getTable();
+    const oBinding = oTable.getBinding("items");
+
+    if (!oBinding) {
+        return;
+    }
+
+    let totalMinutes = 0;
+
+    oBinding.getCurrentContexts().forEach(oCtx => {
+        const oData = oCtx.getObject();
+
+        if (oData.ClockIn && oData.ClockOut &&
+            oData.ClockIn.ms !== undefined &&
+            oData.ClockOut.ms !== undefined) {
+
+            const diffMs = oData.ClockOut.ms - oData.ClockIn.ms;
+            if (diffMs > 0) {
+                totalMinutes += Math.floor(diffMs / 60000);
+            }
+        }
+    });
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    this.getView().getModel("totals").setProperty(
+        "/hours",
+        `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`
+    );
+},
+
+       
         
 
     });

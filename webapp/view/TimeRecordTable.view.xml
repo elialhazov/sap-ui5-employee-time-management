@@ -66,8 +66,38 @@
                     icon="sap-icon://clear-filter"
                     type="Transparent"
                     class="sapUiSmallMarginBegin"
-                    press=".onClearMonthYearFilter"/>
+                    press=".onClearMonthYearFilter"/>                   
             </HBox>
+
+            <!-- Monthly Standard Box -->
+<!-- Monthly Summary Box -->
+<HBox
+    visible="{standard>/visible}"
+    class="monthlyKpiBar sapUiSmallMarginBottom"
+    alignItems="Center"
+    justifyContent="SpaceBetween">
+
+    <!-- Monthly Standard -->
+    <VBox class="kpiCard kpiStandard">
+        <Text
+            text="{i18n>monthly Standard}"
+            class="kpiTitle"/>
+        <Text
+            text="{= ${standard>/hours} + ' hours' }"
+            class="kpiValue"/>
+    </VBox>
+
+    <!-- Total Hours -->
+    <VBox class="kpiCard kpiTotal">
+        <Text
+            text="{i18n>totalHours}"
+            class="kpiTitle"/>
+        <Text
+            text="{totals>/hours}"
+            class="kpiValue"/>
+    </VBox>
+</HBox>
+
 
             <!-- Smart Table -->
             <smartTable:SmartTable
@@ -88,6 +118,8 @@
 
                 <!-- Inner sap.m.Table required for ResponsiveTable -->
                 <Table>
+
+
                     <columns>
                         <Column>
                             <customData>
@@ -191,6 +223,7 @@
                             </cells>
                         </ColumnListItem>
                     </items>
+                    
                 </Table>
             </smartTable:SmartTable>
         </content>

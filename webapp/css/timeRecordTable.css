@@ -9,9 +9,71 @@
     display: none !important;
 }
 
+/* ===== KPI BAR ===== */
+.monthlyKpiBar {
+    background: linear-gradient(135deg, #f8fafc, #eef2f7);
+    border-radius: 14px;
+    padding: 16px 20px;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* ===== KPI CARD ===== */
+.kpiCard {
+    min-width: 220px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ===== TITLES ===== */
+.kpiTitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+/* ===== VALUES ===== */
+.kpiValue {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ===== MONTHLY STANDARD ===== */
+.kpiStandard {
+    border-left: 5px solid #2563eb;
+}
+
+.kpiStandard .kpiValue {
+    color: #2563eb;
+}
+
+/* ===== TOTAL HOURS ===== */
+.kpiTotal {
+    border-left: 5px solid #059669;
+}
+
+.kpiTotal .kpiValue {
+    color: #059669;
+}
+
+
+
+
 /* Optional: smaller padding on mobile */
 @media (max-width: 768px) {
     .timeMgmtTable .sapMListTblCell {
         padding: 0.3rem 0.5rem;
     }
 }
+
