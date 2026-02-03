@@ -5,66 +5,83 @@
     xmlns:core="sap.ui.core"
     displayBlock="true">
 
-    <Page title="Manager Dashboard" class="managerPage">
+    <Page class="managerPage">
+
+        <!-- ===== HEADER ===== -->
+        <customHeader>
+            <Bar class="appHeader">
+
+                <contentLeft>
+                    <Title
+                        text="MANAGER DASHBOARD"
+                        level="H2"
+                        class="headerTitle"/>
+                </contentLeft>
+
+                <contentRight>
+                    <HBox alignItems="Center" gap="1rem">
+                        <Text
+                            text="{= 'Hello ' + ${user>/name} }"
+                            class="headerGreeting"/>
+
+                        <Button
+                            text="Manage Clients"
+                            icon="sap-icon://business-objects-experience"
+                            type="Emphasized"
+                            press=".onManageClients"/>
+                    </HBox>
+                </contentRight>
+
+            </Bar>
+        </customHeader>
 
         <content>
 
-            <!-- ===== Manager Header ===== -->
-            <VBox class="managerHeader">
-
-                <HBox
-                    alignItems="Center"
-                    class="managerTitleRow">
-
-                    <core:Icon
-                        src="sap-icon://manager"
-                        size="2.5rem"
-                        class="managerIcon"/>
-
-                    <VBox>
-                        <Title
-                            text="Manager Dashboard"
-                            level="H1"
-                            class="managerTitle"/>
-
-                        <Text
-                            text="Overview and supervision of employees work activity"
-                            class="managerSubtitle"/>
-                    </VBox>
-
-                </HBox>
-
-            </VBox>
-
-            <!-- ===== Employees Grid ===== -->
-            <VBox
+            <!-- ===== EMPLOYEE CARDS ===== -->
+            <FlexBox
+                wrap="Wrap"
                 class="employeeGrid"
-                items="{/EmployeeSet}"
-                renderType="Bare">
+                items="{/EmployeeSet}">
 
                 <items>
                     <VBox class="employeeCard">
 
-                        <Text
-                            text="{Name}"
-                            class="employeeName"/>
+                        <!-- Card Header -->
+                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                            <Text
+                                text="{Name}"
+                                class="employeeName"/>
 
+                            <core:Icon
+                                src="sap-icon://employee"
+                                size="1.5rem"
+                                class="employeeIcon"/>
+                        </HBox>
+
+                        <!-- Employee ID -->
                         <Text
                             text="Employee ID: {EmployeeId}"
                             class="employeeId"/>
 
-                        <Button
-                            text="View Details"
-                            type="Emphasized"
-                            icon="sap-icon://inspect"
-                            class="employeeBtn"
-                            press=".onViewEmployee"/>
+                        <!-- Actions -->
+                        <HBox class="employeeActions">
+                            <Button
+                                text="Time Records"
+                                icon="sap-icon://inspect"
+                                type="Emphasized"
+                                press=".onViewEmployee"/>
+
+                            <Button
+                                icon="sap-icon://key"
+                                tooltip="Client Permissions"
+                                press=".onAssignClients"/>
+                        </HBox>
+
                     </VBox>
                 </items>
 
-            </VBox>
+            </FlexBox>
 
         </content>
     </Page>
-
 </mvc:View>

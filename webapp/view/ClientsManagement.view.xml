@@ -1,0 +1,72 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.ClientsManagement"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Page
+        title="Clients Management"
+        class="clientsPage"
+        showNavButton="true"
+        navButtonPress=".onNavBack">
+
+        <content>
+            <HBox class="clientsLayout">
+
+                <!-- LEFT: CLIENT LIST -->
+                <VBox class="clientsPanel">
+                    <Title text="Clients" level="H3"/>
+
+                    <List
+                        items="{/ClientSet}"
+                        mode="SingleSelectMaster"
+                        selectionChange=".onClientSelect">
+
+                        <StandardListItem
+                            title="{ClientName}"
+                            description="{ClientId}"
+                            icon="sap-icon://customer"/>
+                    </List>
+                </VBox>
+
+                <!-- RIGHT: EMPLOYEES -->
+                <VBox class="employeesPanel">
+                    <Title text="Employees Assigned" level="H3"/>
+
+                    <Table
+                        items="{employees>/items}"
+                        inset="false">
+
+                        <columns>
+                            <Column>
+                                <Text text="Employee"/>
+                            </Column>
+                            <Column width="120px">
+                                <Text text="Assigned"/>
+                            </Column>
+                        </columns>
+
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{employees>Name}"/>
+                                    <CheckBox
+                                        selected="{employees>Assigned}"
+                                        select=".onToggleEmployee"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+
+                    </Table>
+
+                    <Button
+                        text="Save Changes"
+                        type="Emphasized"
+                        class="saveBtn"
+                        press=".onSave"/>
+                </VBox>
+
+            </HBox>
+        </content>
+    </Page>
+</mvc:View>

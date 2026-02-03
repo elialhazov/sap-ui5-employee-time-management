@@ -1,0 +1,44 @@
+.clientsPage {
+    background: #f6f7f9;
+}
+
+/* Layout */
+.clientsLayout {
+    padding: 1.5rem;
+    gap: 2rem;
+}
+
+/* Left panel */
+.clientsPanel {
+    width: 260px;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* Right panel */
+.employeesPanel {
+    flex: 1;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* Save button */
+.saveBtn {
+    margin-top: 1.5rem;
+    align-self: flex-end;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .clientsLayout {
+        flex-direction: column;
+    }
+
+    .clientsPanel {
+        width: 100%;
+    }
+}

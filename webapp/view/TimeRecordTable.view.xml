@@ -12,7 +12,6 @@
           <customHeader>
             <Bar class="appHeader">
 
-                <!-- LEFT: TITLE -->
                 <contentLeft>
                     <Title
                         text="{i18n>timeRecordsTitle}"
@@ -20,10 +19,9 @@
                         class="headerTitle"/>
                 </contentLeft>
 
-                <!-- RIGHT: HEY USER -->
                 <contentRight>
                     <Text
-                        text="{= 'Hey ' + ${user>/name} }"
+                        text="{= 'Hello ' + ${user>/name} }"
                         class="headerGreeting"/>
                 </contentRight>
 
@@ -32,7 +30,6 @@
         
         <content>
 
-            <!-- Root Responsive Wrapper -->
             <VBox width="100%" class="sapUiResponsiveContentPadding">
 
                 <!-- Add New Record Button -->

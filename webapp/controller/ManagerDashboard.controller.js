@@ -5,17 +5,47 @@ sap.ui.define([
 
     return Controller.extend("employeetimemanagement.controller.ManagerDashboard", {
 
-        onInit: function () {
-        },
 
         onViewEmployee: function (oEvent) {
-            const oCtx = oEvent.getSource().getBindingContext();
+            const oSource = oEvent.getSource();
+            const oCtx = oSource.getBindingContext();
+
+            if (!oCtx) {
+                return;
+            }
+
             const sEmployeeId = oCtx.getProperty("EmployeeId");
 
-            this.getOwnerComponent().getRouter().navTo(
-                "RouteTimeRecordTable",
-                { employeeId: sEmployeeId }
-            );
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("RouteTimeRecordTable", {
+                    employeeId: sEmployeeId
+                });
+        },
+
+
+        onAssignClients: function (oEvent) {
+            const oSource = oEvent.getSource();
+            const oCtx = oSource.getBindingContext();
+
+            if (!oCtx) {
+                return;
+            }
+
+            const sEmployeeId = oCtx.getProperty("EmployeeId");
+
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("RouteEmployeeClients", {
+                    employeeId: sEmployeeId
+                });
+        },
+
+
+        onManageClients: function () {
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("RouteClientsManagement");
         }
 
     });

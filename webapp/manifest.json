@@ -138,6 +138,11 @@
           "name": "RouteManagerDashboard",
           "pattern": "manager",
           "target": ["TargetManagerDashboard"]
+        },
+        {
+          "name": "RouteClientsManagement",
+          "pattern": "clients",
+          "target": ["TargetClientsManagement"]
         }
       ],
       "targets": {
@@ -156,7 +161,11 @@
         "TargetManagerDashboard": {
           "id": "ManagerDashboard",
           "name": "ManagerDashboard"
-      }
+      },
+        "TargetClientsManagement": {
+          "id": "ClientsManagement",
+          "name": "ClientsManagement"
+        }   
     }
     },
     "rootView": {

@@ -243,6 +243,7 @@ sap.ui.define([
             this.byId("tpClockOut").setValue("");
             this.byId("txtTimer").setText("0:00:00");
         }
+        
     });
 });
 
