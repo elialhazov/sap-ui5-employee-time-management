@@ -8,6 +8,28 @@
     displayBlock="true">
 
     <Page title="{i18n>timeRecordsTitle}">
+
+          <customHeader>
+            <Bar class="appHeader">
+
+                <!-- LEFT: TITLE -->
+                <contentLeft>
+                    <Title
+                        text="{i18n>timeRecordsTitle}"
+                        level="H2"
+                        class="headerTitle"/>
+                </contentLeft>
+
+                <!-- RIGHT: HEY USER -->
+                <contentRight>
+                    <Text
+                        text="{= 'Hey ' + ${user>/name} }"
+                        class="headerGreeting"/>
+                </contentRight>
+
+            </Bar>
+        </customHeader>
+        
         <content>
 
             <!-- Root Responsive Wrapper -->

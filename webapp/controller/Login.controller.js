@@ -24,23 +24,29 @@ sap.ui.define([
                 Name: sName,
                 Password: sPassword
             }, {
-                success: function (oData) {
-                    // Login successful
-                   MessageToast.show("Login successful");
+            success: function (oData) {
+                MessageToast.show("Login successful");
 
-                    let sEmployeeId = oData.EmployeeId;
-                    let sRole = oData.Role;
+                const oUserModel = new sap.ui.model.json.JSONModel({
+                    name: oData.Name,       
+                    email: oData.Email     
+                });
 
-                    if (sRole === "MANAGER") {
-                        this.getOwnerComponent().getRouter().navTo("RouteManagerDashboard");
-                        return;
+                this.getOwnerComponent().setModel(oUserModel, "user");
+
+                let sEmployeeId = oData.EmployeeId;
+                let sRole = oData.Role;
+
+                if (sRole === "MANAGER") {
+                    this.getOwnerComponent().getRouter().navTo("RouteManagerDashboard");
+                    return;
                 }
 
-                    // Navigate to employee detail page
-                    this.getOwnerComponent().getRouter().navTo("RouteTimeManagement", {
-                        employeeId: sEmployeeId
-                    }); 
-                }.bind(this), 
+                this.getOwnerComponent().getRouter().navTo("RouteTimeManagement", {
+                    employeeId: sEmployeeId
+                });
+
+            }.bind(this),
                 error: function (oError) {
                     MessageBox.error("Login failed: invalid Name or Password");
                 }
