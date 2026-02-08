@@ -6,17 +6,28 @@
 
     <Page
         title="Clients Management"
+        class="clientsPage"
         showNavButton="true"
         navButtonPress=".onNavBack">
 
         <content>
 
-            <Table
-                id="matrixTable"
-                width="100%"
-                noDataText="No data"
-                fixedLayout="false">
-            </Table>
+            <VBox class="clientsLayout">
+
+                <VBox class="employeesPanel">
+
+                    <Table
+                        id="matrixTable"
+                        class="clientsMatrixTable"
+                        width="100%"
+                        noDataText="No data"
+                        fixedLayout="false"
+                        sticky="ColumnHeaders">
+                    </Table>
+
+                </VBox>
+
+            </VBox>
 
         </content>
     </Page>

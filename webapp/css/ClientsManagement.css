@@ -1,44 +1,172 @@
+/* =========================
+   PAGE
+   ========================= */
+
 .clientsPage {
-    background: #f6f7f9;
+    background: linear-gradient(180deg, #f6f7f9 0%, #eef1f5 100%);
+    min-height: 100%;
 }
 
-/* Layout */
+/* =========================
+   LAYOUT
+   ========================= */
+
 .clientsLayout {
-    padding: 1.5rem;
+    display: flex;
     gap: 2rem;
+    padding: 1.75rem;
 }
 
-/* Left panel */
+/* =========================
+   LEFT PANEL – CLIENTS
+   ========================= */
+
 .clientsPanel {
     width: 260px;
     background: #ffffff;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border: 1px solid #eef1f5;
 }
 
-/* Right panel */
+/* =========================
+   RIGHT PANEL – MATRIX
+   ========================= */
+
 .employeesPanel {
     flex: 1;
     background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    padding: 1.75rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border: 1px solid #eef1f5;
+    overflow-x: auto;
 }
 
-/* Save button */
+/* =========================
+   MATRIX TABLE – MODERN
+   ========================= */
+
+.clientsMatrixTable {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* Header */
+.clientsMatrixTable .sapMListTblHeaderCell {
+    background: linear-gradient(180deg, #f9fafb, #eef1f5);
+    border-bottom: 1px solid #e2e6ec;
+}
+
+.clientsMatrixTable .sapMColumnHeader {
+    font-weight: 600;
+    color: #1f2937;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Client header */
+.clientsMatrixTable .sapMColumnHeader:first-child {
+    text-align: left;
+    padding-left: 1rem;
+}
+
+/* Rows */
+.clientsMatrixTable .sapMListTblRow {
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Zebra */
+.clientsMatrixTable .sapMListTblRow:nth-child(even) {
+    background: #f9fafb;
+}
+
+/* Hover */
+.clientsMatrixTable .sapMListTblRow:hover {
+    background: #eef4ff;
+}
+
+/* Cells */
+.clientsMatrixTable .sapMListTblCell {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #edf0f4;
+    text-align: center;
+}
+
+/* Client name cell */
+.clientsMatrixTable .sapMListTblCell:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: #111827;
+    padding-left: 1rem;
+}
+
+/* =========================
+   CHECKBOX STYLING
+   ========================= */
+
+.clientsMatrixTable .sapMCb {
+    margin: auto;
+}
+
+.clientsMatrixTable .sapMCbBg {
+    border-radius: 6px;
+}
+
+/* Checked */
+.clientsMatrixTable .sapMCbBg.sapMCbMarkChecked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Click animation */
+.clientsMatrixTable .sapMCbBg.sapMCbMarkChecked::after {
+    animation: pop 0.15s ease-out;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.85); }
+    100% { transform: scale(1); }
+}
+
+/* Sticky header shadow */
+.clientsMatrixTable .sapMSticky {
+    box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+/* =========================
+   SAVE BUTTON
+   ========================= */
+
 .saveBtn {
     margin-top: 1.5rem;
     align-self: flex-end;
 }
 
-/* Mobile */
+/* =========================
+   MOBILE
+   ========================= */
+
 @media (max-width: 768px) {
+
     .clientsLayout {
         flex-direction: column;
+        padding: 1rem;
     }
 
     .clientsPanel {
         width: 100%;
+    }
+
+    .employeesPanel {
+        padding: 1.25rem;
+    }
+
+    .clientsMatrixTable {
+        font-size: 0.9rem;
     }
 }
