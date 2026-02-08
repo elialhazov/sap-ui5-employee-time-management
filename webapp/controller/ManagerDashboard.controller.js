@@ -5,11 +5,8 @@ sap.ui.define([
 
     return Controller.extend("employeetimemanagement.controller.ManagerDashboard", {
 
-
         onViewEmployee: function (oEvent) {
-            const oSource = oEvent.getSource();
-            const oCtx = oSource.getBindingContext();
-
+            const oCtx = oEvent.getSource().getBindingContext();
             if (!oCtx) {
                 return;
             }
@@ -23,11 +20,9 @@ sap.ui.define([
                 });
         },
 
-
+        /* 🔑 Client Permissions – per employee */
         onAssignClients: function (oEvent) {
-            const oSource = oEvent.getSource();
-            const oCtx = oSource.getBindingContext();
-
+            const oCtx = oEvent.getSource().getBindingContext();
             if (!oCtx) {
                 return;
             }
@@ -36,29 +31,17 @@ sap.ui.define([
 
             this.getOwnerComponent()
                 .getRouter()
-                .navTo("RouteEmployeeClients", {
+                .navTo("RouteEmployeeClientPermissions", {
                     employeeId: sEmployeeId
                 });
         },
 
-
+        /* Global matrix */
         onManageClients: function () {
             this.getOwnerComponent()
                 .getRouter()
                 .navTo("RouteClientsManagement");
-        },
-
-        onAssignClients: function (oEvent) {
-    const sEmployeeId = oEvent.getSource()
-        .getBindingContext()
-        .getProperty("EmployeeId");
-
-    this.getOwnerComponent()
-        .getRouter()
-        .navTo("RouteEmployeeClientPermissions", {
-            employeeId: sEmployeeId
-        });
-}
+        }
 
     });
 });

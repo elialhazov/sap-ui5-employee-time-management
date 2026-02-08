@@ -26,38 +26,53 @@ sap.ui.define([
             this._loadData();
         },
 
-        _loadData: function () {
-            const oOData = this.getOwnerComponent().getModel();
+_loadData: function () {
+    const oOData = this.getOwnerComponent().getModel();
 
-            oOData.read("/EmployeeClientAdminSet", {
-                success: function (oData) {
+    oOData.read("/EmployeeClientAdminSet", {
+        success: function (oData) {
 
-                    const mAssigned = {};
-                    oData.results.forEach(r => {
-                        if (r.EmployeeId === this._employeeId) {
-                            mAssigned[r.ClientId] = true;
-                        }
-                    });
+            const aResults = oData.results || [];
 
-                    const aClients = [];
-                    oData.results.forEach(r => {
-                        if (!aClients.find(c => c.ClientId === r.ClientId)) {
-                            aClients.push({
-                                ClientId: r.ClientId,
-                                ClientName: r.ClientName,
-                                assigned: !!mAssigned[r.ClientId]
-                            });
-                        }
-                    });
+            const oEmpRow = aResults.find(
+                r => r.EmployeeId === this._employeeId && r.Name
+            );
 
-                    this.getView().setModel(new JSONModel(aClients), "clients");
+            if (oEmpRow) {
+                this.getView()
+                    .getModel("view")
+                    .setProperty("/employeeName", oEmpRow.Name);
+            }
 
-                }.bind(this),
-                error: function () {
-                    MessageBox.error("Failed to load client permissions");
+            const mAssigned = {};
+            aResults.forEach(r => {
+                if (r.EmployeeId === this._employeeId) {
+                    mAssigned[r.ClientId] = true;
                 }
             });
-        },
+
+            const aClients = [];
+            aResults.forEach(r => {
+                if (!aClients.find(c => c.ClientId === r.ClientId)) {
+                    aClients.push({
+                        ClientId: r.ClientId,
+                        ClientName: r.ClientName,
+                        assigned: !!mAssigned[r.ClientId]
+                    });
+                }
+            });
+
+            this.getView().setModel(
+                new JSONModel(aClients),
+                "clients"
+            );
+
+        }.bind(this),
+        error: function () {
+            sap.m.MessageBox.error("Failed to load client permissions");
+        }
+    });
+},
 
         onToggleClient: function (oEvent) {
             const bSelected = oEvent.getParameter("selected");
