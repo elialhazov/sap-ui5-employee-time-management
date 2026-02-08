@@ -97,7 +97,15 @@
         },
         {
           "uri": "css/managerDashboard.css"
-        }
+        },
+        {
+          "uri": "css/ClientsManagement.css"
+        },
+          {
+            "uri": "css/ClientPermissions.css"
+          }
+               
+
       ]
     },
     "routing": {
@@ -143,6 +151,11 @@
           "name": "RouteClientsManagement",
           "pattern": "clients",
           "target": ["TargetClientsManagement"]
+        },
+        {
+          "name": "RouteEmployeeClientPermissions",
+          "pattern": "manager/employee/{employeeId}/clients",
+          "target": ["TargetEmployeeClientPermissions"]
         }
       ],
       "targets": {
@@ -165,7 +178,11 @@
         "TargetClientsManagement": {
           "id": "ClientsManagement",
           "name": "ClientsManagement"
-        }   
+        },
+       "TargetEmployeeClientPermissions": {
+        "id": "ClientPermissions",
+        "name": "ClientPermissions"
+        }    
     }
     },
     "rootView": {
