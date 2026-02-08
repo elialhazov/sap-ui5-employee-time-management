@@ -1,0 +1,42 @@
+<mvc:View
+    controllerName="employeetimemanagement.controller.ClientPermissions"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Page
+        title="Client Permissions"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="clientsPage">
+
+        <content>
+            <VBox class="employeesPanel">
+
+                <Title
+                    text="{= 'Employee: ' + ${view>/employeeName} + ' (' + ${view>/employeeId} + ')' }"
+                    level="H3"
+                    class="sapUiSmallMarginBottom"/>
+
+                <List
+                    items="{clients>/}"
+                    growing="true"
+                    growingScrollToLoad="true">
+
+                    <items>
+                        <CustomListItem>
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <Text text="{clients>ClientName}" />
+                                <CheckBox
+                                    selected="{clients>assigned}"
+                                    select=".onToggleClient"/>
+                            </HBox>
+                        </CustomListItem>
+                    </items>
+
+                </List>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,128 @@
+/* =========================
+   PAGE WRAPPER
+   ========================= */
+
+.clientsPage {
+    background: linear-gradient(180deg, #f6f7f9 0%, #eef1f5 100%);
+    min-height: 100%;
+}
+
+/* =========================
+   MAIN PANEL
+   ========================= */
+
+.employeesPanel {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eef1f5;
+    max-width: 640px;
+    margin: 1.5rem auto;
+}
+
+/* =========================
+   PAGE TITLE
+   ========================= */
+
+.employeesPanel .sapMTitle {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* =========================
+   CLIENT LIST
+   ========================= */
+
+.employeesPanel .sapMList {
+    margin-top: 1.25rem;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+/* =========================
+   LIST ITEMS
+   ========================= */
+
+.employeesPanel .sapMLIB {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #edf0f4;
+    transition: background 0.2s ease;
+}
+
+/* Zebra rows */
+.employeesPanel .sapMLIB:nth-child(even) {
+    background: #f9fafb;
+}
+
+/* Hover */
+.employeesPanel .sapMLIB:hover {
+    background: #eef4ff;
+}
+
+/* =========================
+   CLIENT NAME
+   ========================= */
+
+.employeesPanel .sapMText {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+/* =========================
+   CHECKBOX – MODERN
+   ========================= */
+
+.employeesPanel .sapMCb {
+    margin-left: auto;
+}
+
+.employeesPanel .sapMCbBg {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid #c7d2fe;
+    transition: all 0.15s ease;
+}
+
+/* Checked */
+.employeesPanel .sapMCbBg.sapMCbMarkChecked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Animation */
+.employeesPanel .sapMCbBg.sapMCbMarkChecked::after {
+    animation: pop 0.15s ease-out;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.85); }
+    100% { transform: scale(1); }
+}
+
+/* =========================
+   BACK BUTTON
+   ========================= */
+
+.sapMPageHeader .sapMBtn {
+    border-radius: 8px;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 600px) {
+
+    .employeesPanel {
+        padding: 1.5rem 1.25rem;
+        margin: 1rem;
+    }
+
+    .employeesPanel .sapMText {
+        font-size: 0.9rem;
+    }
+}
