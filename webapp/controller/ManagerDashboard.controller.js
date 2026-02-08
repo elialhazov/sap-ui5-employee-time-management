@@ -46,7 +46,19 @@ sap.ui.define([
             this.getOwnerComponent()
                 .getRouter()
                 .navTo("RouteClientsManagement");
-        }
+        },
+
+        onAssignClients: function (oEvent) {
+    const sEmployeeId = oEvent.getSource()
+        .getBindingContext()
+        .getProperty("EmployeeId");
+
+    this.getOwnerComponent()
+        .getRouter()
+        .navTo("RouteEmployeeClientPermissions", {
+            employeeId: sEmployeeId
+        });
+}
 
     });
 });
